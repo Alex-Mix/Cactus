@@ -4,90 +4,82 @@ import com.hjysite.cactus.common.AttributeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @description: TODO
  * @author: hjy
- * @date: 2021/11/16
+ * @date: 2021/11/22
  **/
 public interface UnitEngine extends AttributeMap {
-
     Logger log = LoggerFactory.getLogger(UnitEngine.class);
 
     default void execute(Object o) {
         Object result = null;
+        Throwable throwable = null;
         try {
             try {
-                AbstractUnitPipelineContext ctx = executePipeline();
-                log.debug("========= 开始执行executePipeline ============");
-                invokeUnitPipelineWork(ctx, o);
-                log.debug("========= 开始执行executePipeline ============");
-                result = ctx.invokeResultPoll();
+                UnitEnginePipeline pipeline = executePipeline();
+                log.debug("========= executePipeline开始执行 ============");
+                pipeline.exec(o);
+                log.debug("========= executePipeline执行结束 ============");
+                result = pipeline.resultPoll();
             } catch (Throwable t) {
+                throwable = t;
                 whenFail(t);
                 return;
             }
             whenSuccess(result);
         } finally {
-            whenComplete(result);
+            whenComplete(throwable == null ? result : throwable);
         }
     }
 
-    AbstractUnitPipelineContext executePipeline();
+    UnitEnginePipeline executePipeline();
 
-    AbstractUnitPipelineContext completePipeline();
+    UnitEnginePipeline completePipeline();
 
-    AbstractUnitPipelineContext successPipeline();
+    UnitEnginePipeline successPipeline();
 
-    AbstractUnitPipelineContext failurePipeline();
+    UnitEnginePipeline failurePipeline();
 
-    default AbstractUnitPipelineContext addSuccessUnit(Unit unit) {
+    default UnitEnginePipeline addSuccessUnit(Unit unit) {
         return addSuccessUnit(null, unit);
     }
 
-    default AbstractUnitPipelineContext addSuccessUnit(String name, Unit unit) {
-        return successPipeline().invokeAddLast(name, unit);
+    default UnitEnginePipeline addSuccessUnit(String name, Unit unit) {
+        return successPipeline().addLast(unit);
     }
 
-    default AbstractUnitPipelineContext addCompleteUnit(Unit unit) {
+    default UnitEnginePipeline addCompleteUnit(Unit unit) {
         return addCompleteUnit(null, unit);
     }
 
-    default AbstractUnitPipelineContext addCompleteUnit(String name, Unit unit) {
-        return completePipeline().invokeAddLast(name, unit);
+    default UnitEnginePipeline addCompleteUnit(String name, Unit unit) {
+        return completePipeline().addLast(name, unit);
     }
 
-    default AbstractUnitPipelineContext addFailureUnit(Unit unit) {
+    default UnitEnginePipeline addFailureUnit(Unit unit) {
         return addFailureUnit(null, unit);
     }
 
-    default AbstractUnitPipelineContext addFailureUnit(String name, Unit unit) {
-        return failurePipeline().invokeAddLast(name, unit);
+    default UnitEnginePipeline addFailureUnit(String name, Unit unit) {
+        return failurePipeline().addLast(name, unit);
     }
 
     default void whenComplete(Object result) {
         log.debug("========= 开始执行completePipeline ============");
-        AbstractUnitPipelineContext ctx = completePipeline();
-        invokeUnitPipelineWork(ctx, result);
+        completePipeline().exec(result);
         log.debug("========= 结束执行completePipeline ============");
     }
 
     default void whenSuccess(Object result) {
         log.debug("========= 开始执行successPipeline ============");
-        AbstractUnitPipelineContext ctx = successPipeline();
-        invokeUnitPipelineWork(ctx, result);
+        successPipeline().exec(result);
         log.debug("========= 结束执行successPipeline ============");
     }
 
     default void whenFail(Throwable throwable) {
         log.debug("========= 开始执行failurePipeline ============");
-        AbstractUnitPipelineContext ctx = failurePipeline();
-        invokeUnitPipelineWork(ctx, throwable);
+        failurePipeline().exec(throwable);
         log.debug("========= 结束执行failurePipeline ============");
     }
-
-    static void invokeUnitPipelineWork(AbstractUnitPipelineContext ctx, Object o) {
-        ctx.unit().work(ctx, o);
-    }
-
 }
