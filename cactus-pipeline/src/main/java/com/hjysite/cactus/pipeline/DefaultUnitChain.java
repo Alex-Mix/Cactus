@@ -26,7 +26,7 @@ public class DefaultUnitChain implements UnitChain {
     }
 
     @Override
-    public void work(UnitInvokerContext ctx, Object o) {
+    public void work(InvokeUnitContext ctx, Object o) {
         UnitChainContext.UnitChainInnerContext innerCtx = ((UnitChainContext) ctx).getInnerContext(head);
         head.unit.work(innerCtx, o);
     }
@@ -336,7 +336,7 @@ public class DefaultUnitChain implements UnitChain {
 
     final class HeadNode implements Unit {
         @Override
-        public void work(UnitInvokerContext ctx, Object o) {
+        public void work(InvokeUnitContext ctx, Object o) {
             ctx.fireWork(o);
         }
     }
@@ -344,7 +344,7 @@ public class DefaultUnitChain implements UnitChain {
 
     final class TailNode implements Unit {
         @Override
-        public void work(UnitInvokerContext ctx, Object o) {
+        public void work(InvokeUnitContext ctx, Object o) {
             ctx.chainContext().fireWork(o);
         }
     }

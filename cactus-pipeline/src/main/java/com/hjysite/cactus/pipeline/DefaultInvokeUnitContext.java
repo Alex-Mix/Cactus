@@ -5,10 +5,10 @@ package com.hjysite.cactus.pipeline;
  * @author: hjy
  * @date: 2021/11/25
  **/
-public class DefaultUnitInvokerContext extends AbstractUnitInvokerContext {
+public class DefaultInvokeUnitContext extends AbstractInvokeUnitContext {
     private final Unit unit;
 
-    public DefaultUnitInvokerContext(UnitEngine engine, UnitEnginePipeline pipeline, String name, Unit unit) {
+    public DefaultInvokeUnitContext(UnitEngine engine, UnitEnginePipeline pipeline, String name, Unit unit) {
         super(engine, pipeline, null, name);
         this.unit = unit;
     }

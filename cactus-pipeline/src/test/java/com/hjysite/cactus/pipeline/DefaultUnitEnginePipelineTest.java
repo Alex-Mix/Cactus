@@ -207,7 +207,7 @@ class DefaultUnitEnginePipelineTest {
 
     public final class IntIncrementUnit extends SimpleUnit<Integer> {
         @Override
-        public void work0(UnitInvokerContext ctx, Integer origin) {
+        public void work0(InvokeUnitContext ctx, Integer origin) {
             ctx.fireWork(origin + 1);
         }
     }
@@ -215,14 +215,14 @@ class DefaultUnitEnginePipelineTest {
 
     public final class NoOpUnit implements Unit {
         @Override
-        public void work(UnitInvokerContext ctx, Object o) {
+        public void work(InvokeUnitContext ctx, Object o) {
             ctx.fireWork(o);
         }
     }
 
     public final class NoOpUnitChain extends DefaultUnitChain {
         @Override
-        public void work(UnitInvokerContext ctx, Object o) {
+        public void work(InvokeUnitContext ctx, Object o) {
             ctx.fireWork(o);
         }
     }

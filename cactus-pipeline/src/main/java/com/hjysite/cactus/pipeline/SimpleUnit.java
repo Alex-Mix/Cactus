@@ -16,7 +16,7 @@ public abstract class SimpleUnit<T> implements Unit {
     }
 
     @Override
-    public final void work(UnitInvokerContext ctx, Object o) {
+    public final void work(InvokeUnitContext ctx, Object o) {
         if (acceptInboundMessage(o)) {
             @SuppressWarnings("unchecked")
             T t = (T) o;
@@ -26,7 +26,7 @@ public abstract class SimpleUnit<T> implements Unit {
         }
     }
 
-    public abstract void work0(UnitInvokerContext ctx, T t);
+    public abstract void work0(InvokeUnitContext ctx, T t);
 
     public boolean acceptInboundMessage(Object msg) {
         return matcher.match(msg);

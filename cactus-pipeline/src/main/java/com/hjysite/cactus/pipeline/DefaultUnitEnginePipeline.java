@@ -16,15 +16,15 @@ import java.util.function.BiPredicate;
  **/
 public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements UnitEnginePipeline {
 
-    private final static String HEAD_NAME = UnitSequence.generateName0(HeadInvokerContext.class);
-    private final static String TAIL_NAME = UnitSequence.generateName0(TailInvokerContext.class);
+    private final static String HEAD_NAME = UnitSequence.generateName0(HeadContextInvoke.class);
+    private final static String TAIL_NAME = UnitSequence.generateName0(TailContextInvoke.class);
 
     private final UnitEngine engine;
 
     private final LinkedTransferQueue<Object> resultQueue = new LinkedTransferQueue<>();
 
-    final AbstractUnitInvokerContext head = new HeadInvokerContext(HEAD_NAME);
-    final AbstractUnitInvokerContext tail = new TailInvokerContext(TAIL_NAME);
+    final AbstractInvokeUnitContext head = new HeadContextInvoke(HEAD_NAME);
+    final AbstractInvokeUnitContext tail = new TailContextInvoke(TAIL_NAME);
 
     private long size = 0;
 
@@ -39,30 +39,30 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
         head.fireWork(o);
     }
 
-    private AbstractUnitInvokerContext newContext(String name, Unit unit) {
+    private AbstractInvokeUnitContext newContext(String name, Unit unit) {
         if (unit instanceof UnitChain) {
-            return new DefaultUnitChainInvokerContext(engine, this, name, (UnitChain) unit);
+            return new DefaultUnitChainContext(engine, this, name, (UnitChain) unit);
         }
-        return new DefaultUnitInvokerContext(engine, this, name, unit);
+        return new DefaultInvokeUnitContext(engine, this, name, unit);
     }
 
     @Override
-    public AbstractUnitInvokerContext findUnitContext(String name) {
+    public AbstractInvokeUnitContext findUnitContext(String name) {
         return findUnitContext0((cur, arg) -> cur.name().equals(arg), name);
     }
 
     @Override
-    public AbstractUnitInvokerContext findUnitContext(Unit unit) {
+    public AbstractInvokeUnitContext findUnitContext(Unit unit) {
         return findUnitContext0((cur, arg) -> cur.unit() == arg, unit);
     }
 
     @Override
-    public AbstractUnitInvokerContext findUnitContext(Class<? extends Unit> unitType) {
+    public AbstractInvokeUnitContext findUnitContext(Class<? extends Unit> unitType) {
         return findUnitContext0((cur, arg) -> unitType.isAssignableFrom(cur.unit().getClass()), unitType);
     }
 
-    private AbstractUnitInvokerContext findUnitContext0(BiPredicate<AbstractUnitInvokerContext, Object> predicate, Object arg) {
-        AbstractUnitInvokerContext cur = head.next;
+    private AbstractInvokeUnitContext findUnitContext0(BiPredicate<AbstractInvokeUnitContext, Object> predicate, Object arg) {
+        AbstractInvokeUnitContext cur = head.next;
         while (cur != tail) {
             if (predicate.test(cur, arg)) {
                 return cur;
@@ -72,8 +72,8 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
         return null;
     }
 
-    private AbstractUnitInvokerContext getContextOrDie(String name) {
-        AbstractUnitInvokerContext ctx = findUnitContext(name);
+    private AbstractInvokeUnitContext getContextOrDie(String name) {
+        AbstractInvokeUnitContext ctx = findUnitContext(name);
         if (ctx == null) {
             throw new NoSuchElementException(name);
         } else {
@@ -81,8 +81,8 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
         }
     }
 
-    private AbstractUnitInvokerContext getContextOrDie(Unit unit) {
-        AbstractUnitInvokerContext ctx = findUnitContext(unit);
+    private AbstractInvokeUnitContext getContextOrDie(Unit unit) {
+        AbstractInvokeUnitContext ctx = findUnitContext(unit);
         if (ctx == null) {
             throw new NoSuchElementException(unit.getClass().getName());
         } else {
@@ -90,8 +90,8 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
         }
     }
 
-    private AbstractUnitInvokerContext getContextOrDie(Class<? extends Unit> unitType) {
-        AbstractUnitInvokerContext ctx = findUnitContext(unitType);
+    private AbstractInvokeUnitContext getContextOrDie(Class<? extends Unit> unitType) {
+        AbstractInvokeUnitContext ctx = findUnitContext(unitType);
         if (ctx == null) {
             throw new NoSuchElementException(unitType.getName());
         } else {
@@ -100,7 +100,7 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     }
 
     @Override
-    public AbstractUnitInvokerContext firstContext() {
+    public AbstractInvokeUnitContext firstContext() {
         if (head.next != tail) {
             return head.next;
         }
@@ -108,7 +108,7 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     }
 
     @Override
-    public AbstractUnitInvokerContext lastContext() {
+    public AbstractInvokeUnitContext lastContext() {
         if (head.next != tail) {
             return tail.prev;
         }
@@ -133,14 +133,14 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     @Override
     public synchronized DefaultUnitEnginePipeline addFirst(String name, Unit newUnit) {
         name = UnitSequence.ifNullGenerateNameAndCheckDuplicate(this, name, newUnit);
-        AbstractUnitInvokerContext newCtx = newContext(name, newUnit);
+        AbstractInvokeUnitContext newCtx = newContext(name, newUnit);
         addFirst0(newCtx);
         size++;
         return this;
     }
 
-    private void addFirst0(AbstractUnitInvokerContext newCtx) {
-        AbstractUnitInvokerContext next = head.next;
+    private void addFirst0(AbstractInvokeUnitContext newCtx) {
+        AbstractInvokeUnitContext next = head.next;
         newCtx.prev = head;
         newCtx.next = next;
         head.next = newCtx;
@@ -150,14 +150,14 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     @Override
     public synchronized DefaultUnitEnginePipeline addLast(String name, Unit newUnit) {
         name = UnitSequence.ifNullGenerateNameAndCheckDuplicate(this, name, newUnit);
-        AbstractUnitInvokerContext newCtx = newContext(name, newUnit);
+        AbstractInvokeUnitContext newCtx = newContext(name, newUnit);
         addLast0(newCtx);
         size++;
         return this;
     }
 
-    private void addLast0(AbstractUnitInvokerContext newCtx) {
-        AbstractUnitInvokerContext prev = tail.prev;
+    private void addLast0(AbstractInvokeUnitContext newCtx) {
+        AbstractInvokeUnitContext prev = tail.prev;
         newCtx.prev = prev;
         newCtx.next = tail;
         prev.next = newCtx;
@@ -167,14 +167,14 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     @Override
     public synchronized DefaultUnitEnginePipeline addBefore(String baseName, String name, Unit newUnit) {
         name = UnitSequence.ifNullGenerateNameAndCheckDuplicate(this, name, newUnit);
-        AbstractUnitInvokerContext ctx = getContextOrDie(baseName);
-        AbstractUnitInvokerContext newCtx = newContext(name, newUnit);
+        AbstractInvokeUnitContext ctx = getContextOrDie(baseName);
+        AbstractInvokeUnitContext newCtx = newContext(name, newUnit);
         addBefore0(ctx, newCtx);
         size++;
         return this;
     }
 
-    private static void addBefore0(AbstractUnitInvokerContext ctx, AbstractUnitInvokerContext newCtx) {
+    private static void addBefore0(AbstractInvokeUnitContext ctx, AbstractInvokeUnitContext newCtx) {
         newCtx.prev = ctx.prev;
         newCtx.next = ctx;
         ctx.prev.next = newCtx;
@@ -184,14 +184,14 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     @Override
     public synchronized DefaultUnitEnginePipeline addAfter(String baseName, String name, Unit newUnit) {
         name = UnitSequence.ifNullGenerateNameAndCheckDuplicate(this, name, newUnit);
-        AbstractUnitInvokerContext ctx = getContextOrDie(baseName);
-        AbstractUnitInvokerContext newCtx = newContext(name, newUnit);
+        AbstractInvokeUnitContext ctx = getContextOrDie(baseName);
+        AbstractInvokeUnitContext newCtx = newContext(name, newUnit);
         addAfter0(ctx, newCtx);
         size++;
         return this;
     }
 
-    private static void addAfter0(AbstractUnitInvokerContext ctx, AbstractUnitInvokerContext newCtx) {
+    private static void addAfter0(AbstractInvokeUnitContext ctx, AbstractInvokeUnitContext newCtx) {
         newCtx.prev = ctx;
         newCtx.next = ctx.next;
         ctx.next.prev = newCtx;
@@ -206,7 +206,7 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
 
     @Override
     public synchronized Unit remove(String name) {
-        AbstractUnitInvokerContext ctx = getContextOrDie(name);
+        AbstractInvokeUnitContext ctx = getContextOrDie(name);
         remove0(ctx);
         size--;
         return ctx.unit();
@@ -215,7 +215,7 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     @SuppressWarnings("unchecked")
     @Override
     public synchronized <T extends Unit> T remove(Class<T> unitType) {
-        AbstractUnitInvokerContext ctx = getContextOrDie(unitType);
+        AbstractInvokeUnitContext ctx = getContextOrDie(unitType);
         remove0(ctx);
         size--;
         return (T) ctx.unit();
@@ -243,27 +243,27 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
         return unit;
     }
 
-    private void remove0(AbstractUnitInvokerContext ctx) {
-        AbstractUnitInvokerContext prev = ctx.prev;
-        AbstractUnitInvokerContext next = ctx.next;
+    private void remove0(AbstractInvokeUnitContext ctx) {
+        AbstractInvokeUnitContext prev = ctx.prev;
+        AbstractInvokeUnitContext next = ctx.next;
         prev.next = next;
         next.prev = prev;
     }
 
     @Override
     public synchronized Unit replace(Unit oldUnit, String newName, Unit newUnit) {
-        AbstractUnitInvokerContext oldCtx = getContextOrDie(oldUnit);
+        AbstractInvokeUnitContext oldCtx = getContextOrDie(oldUnit);
         newName = UnitSequence.ifNullGenerateNameAndCheckDuplicate(this, newName, newUnit);
-        AbstractUnitInvokerContext newCtx = newContext(newName, newUnit);
+        AbstractInvokeUnitContext newCtx = newContext(newName, newUnit);
         replace0(oldCtx, newCtx);
         return oldUnit;
     }
 
     @Override
     public synchronized Unit replace(String oldName, String newName, Unit newUnit) {
-        AbstractUnitInvokerContext oldCtx = getContextOrDie(oldName);
+        AbstractInvokeUnitContext oldCtx = getContextOrDie(oldName);
         newName = UnitSequence.ifNullGenerateNameAndCheckDuplicate(this, newName, newUnit);
-        AbstractUnitInvokerContext newCtx = newContext(newName, newUnit);
+        AbstractInvokeUnitContext newCtx = newContext(newName, newUnit);
         replace0(oldCtx, newCtx);
         return oldCtx.unit();
     }
@@ -271,16 +271,16 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     @SuppressWarnings("unchecked")
     @Override
     public synchronized <T extends Unit> T replace(Class<T> oldUnitType, String newName, Unit newUnit) {
-        AbstractUnitInvokerContext oldCtx = getContextOrDie(oldUnitType);
+        AbstractInvokeUnitContext oldCtx = getContextOrDie(oldUnitType);
         newName = UnitSequence.ifNullGenerateNameAndCheckDuplicate(this, newName, newUnit);
-        AbstractUnitInvokerContext newCtx = newContext(newName, newUnit);
+        AbstractInvokeUnitContext newCtx = newContext(newName, newUnit);
         replace0(oldCtx, newCtx);
         return (T) oldCtx.unit();
     }
 
-    private void replace0(AbstractUnitInvokerContext oldCtx, AbstractUnitInvokerContext newCtx) {
-        AbstractUnitInvokerContext prev = oldCtx.prev;
-        AbstractUnitInvokerContext next = oldCtx.next;
+    private void replace0(AbstractInvokeUnitContext oldCtx, AbstractInvokeUnitContext newCtx) {
+        AbstractInvokeUnitContext prev = oldCtx.prev;
+        AbstractInvokeUnitContext next = oldCtx.next;
         newCtx.prev = prev;
         newCtx.next = next;
         prev.next = newCtx;
@@ -335,7 +335,7 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     @Override
     public List<String> names() {
         List<String> list = new ArrayList<String>();
-        AbstractUnitInvokerContext ctx = head.next;
+        AbstractInvokeUnitContext ctx = head.next;
         for (;;) {
             if (ctx == null || ctx == tail) {
                 return list;
@@ -345,9 +345,9 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
         }
     }
 
-    class HeadInvokerContext extends AbstractUnitInvokerContext implements Unit {
+    class HeadContextInvoke extends AbstractInvokeUnitContext implements Unit {
 
-        protected HeadInvokerContext(String name) {
+        protected HeadContextInvoke(String name) {
             super(engine, DefaultUnitEnginePipeline.this, null, name);
         }
 
@@ -357,14 +357,14 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
         }
     }
 
-    class TailInvokerContext extends AbstractUnitInvokerContext implements Unit {
+    class TailContextInvoke extends AbstractInvokeUnitContext implements Unit {
 
-        protected TailInvokerContext(String name) {
+        protected TailContextInvoke(String name) {
             super(engine, DefaultUnitEnginePipeline.this, null, name);
         }
 
         @Override
-        public void work(UnitInvokerContext ctx, Object o) {
+        public void work(InvokeUnitContext ctx, Object o) {
             if (o != null) {
                 resultQueue.add(o);
             }

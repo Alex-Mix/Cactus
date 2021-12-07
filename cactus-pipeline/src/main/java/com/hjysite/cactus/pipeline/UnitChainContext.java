@@ -5,10 +5,10 @@ package com.hjysite.cactus.pipeline;
  * @author: hjy
  * @date: 2021/11/22
  **/
-public interface UnitChainContext extends UnitInvokerContext {
+public interface UnitChainContext extends InvokeUnitContext {
 
     UnitChainInnerContext getInnerContext(DefaultUnitChain.UnitNode unitNode);
 
-    interface UnitChainInnerContext extends UnitInvokerContext {
+    interface UnitChainInnerContext extends InvokeUnitContext {
     }
 }

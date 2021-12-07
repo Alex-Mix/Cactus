@@ -7,7 +7,7 @@ package com.hjysite.cactus.pipeline;
  **/
 public abstract class NoInputUnit implements Unit {
     @Override
-    public final void work(UnitInvokerContext ctx, Object o) {
+    public final void work(InvokeUnitContext ctx, Object o) {
         noInputWork(ctx);
         ctx.fireWork(o);
     }

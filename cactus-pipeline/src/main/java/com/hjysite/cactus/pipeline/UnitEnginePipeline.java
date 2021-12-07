@@ -48,15 +48,15 @@ public interface UnitEnginePipeline extends AttributeMap, UnitSequence {
     @Override
     UnitEnginePipeline remove(Unit unit);
 
-    AbstractUnitInvokerContext findUnitContext(String name);
+    AbstractInvokeUnitContext findUnitContext(String name);
 
-    AbstractUnitInvokerContext findUnitContext(Unit unit);
+    AbstractInvokeUnitContext findUnitContext(Unit unit);
 
-    AbstractUnitInvokerContext findUnitContext(Class<? extends Unit> unitType);
+    AbstractInvokeUnitContext findUnitContext(Class<? extends Unit> unitType);
 
-    AbstractUnitInvokerContext firstContext();
+    AbstractInvokeUnitContext firstContext();
 
-    AbstractUnitInvokerContext lastContext();
+    AbstractInvokeUnitContext lastContext();
 
     UnitEnginePipeline clear();
 

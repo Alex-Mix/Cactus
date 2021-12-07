@@ -7,25 +7,25 @@ package com.hjysite.cactus.pipeline;
  **/
 public interface Unit {
 
-    default void work(UnitInvokerContext ctx, Object o) {
+    default void work(InvokeUnitContext ctx, Object o) {
         ctx.fireWork(o);
     }
 
-    default void unitAdded(UnitInvokerContext ctx) {
+    default void unitAdded(InvokeUnitContext ctx) {
     }
 
-    default void unitRemoved(UnitInvokerContext ctx) {
+    default void unitRemoved(InvokeUnitContext ctx) {
     }
 
-    default void workCompleted(UnitInvokerContext ctx) {
+    default void workCompleted(InvokeUnitContext ctx) {
         ctx.fireWorkCompleted();
     }
 
-    default void exceptionCaught(UnitInvokerContext ctx, Throwable throwable) {
+    default void exceptionCaught(InvokeUnitContext ctx, Throwable throwable) {
         ctx.fireExceptionCaught(throwable);
     }
 
-    default void eventTriggered(UnitInvokerContext ctx, Object evt) {
+    default void eventTriggered(InvokeUnitContext ctx, Object evt) {
         ctx.fireEventTriggered(evt);
     }
     

@@ -24,8 +24,8 @@ public class ParallelUnitEnginePipeline extends NoInputUnitEnginePipeline {
     @Override
     public void exec() {
         Map<String, CompletableFuture<?>> unitFutureMap = new HashMap<>();
-        for (AbstractUnitInvokerContext cur = firstContext(); cur != tail; cur = cur.next()) {
-            AbstractUnitInvokerContext ctx = cur;
+        for (AbstractInvokeUnitContext cur = firstContext(); cur != tail; cur = cur.next()) {
+            AbstractInvokeUnitContext ctx = cur;
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> ((NoInputUnit) ctx.unit()).noInputWork(ctx), workers);
             unitFutureMap.put(ctx.name(), future);
         }

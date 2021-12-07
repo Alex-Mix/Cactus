@@ -9,11 +9,11 @@ import com.hjysite.cactus.common.AttributeTag;
  * @author: hjy
  * @date: 2021/11/22
  **/
-public class DefaultUnitChainInvokerContext extends AbstractUnitInvokerContext implements UnitChainContext {
+public class DefaultUnitChainContext extends AbstractInvokeUnitContext implements UnitChainContext {
 
     private final UnitChain unitChain;
 
-    protected DefaultUnitChainInvokerContext(UnitEngine engine, UnitEnginePipeline pipeline, String name, UnitChain unitChain) {
+    protected DefaultUnitChainContext(UnitEngine engine, UnitEnginePipeline pipeline, String name, UnitChain unitChain) {
         super(engine, pipeline, null, name);
         this.unitChain = unitChain;
     }
@@ -24,25 +24,25 @@ public class DefaultUnitChainInvokerContext extends AbstractUnitInvokerContext i
     }
 
     @Override
-    public DefaultUnitChainInvokerContext fireWork(Object o) {
+    public DefaultUnitChainContext fireWork(Object o) {
         super.fireWork(o);
         return this;
     }
 
     @Override
-    public DefaultUnitChainInvokerContext fireExceptionCaught(Throwable throwable) {
+    public DefaultUnitChainContext fireExceptionCaught(Throwable throwable) {
         super.fireExceptionCaught(throwable);
         return this;
     }
 
     @Override
-    public DefaultUnitChainInvokerContext fireEventTriggered(Object evt) {
+    public DefaultUnitChainContext fireEventTriggered(Object evt) {
         super.fireEventTriggered(evt);
         return this;
     }
 
     @Override
-    public DefaultUnitChainInvokerContext fireWorkCompleted() {
+    public DefaultUnitChainContext fireWorkCompleted() {
         super.fireWorkCompleted();
         return this;
     }
@@ -56,10 +56,10 @@ public class DefaultUnitChainInvokerContext extends AbstractUnitInvokerContext i
     @SuppressWarnings("InnerClassMayBeStatic")
     public class DefaultUnitChainInnerContext implements UnitChainInnerContext {
 
-        final DefaultUnitChainInvokerContext outCtx;
+        final DefaultUnitChainContext outCtx;
         final DefaultUnitChain.UnitNode unitNode;
 
-        public DefaultUnitChainInnerContext(DefaultUnitChainInvokerContext outCtx, DefaultUnitChain.UnitNode unitNode) {
+        public DefaultUnitChainInnerContext(DefaultUnitChainContext outCtx, DefaultUnitChain.UnitNode unitNode) {
             this.outCtx = outCtx;
             this.unitNode = unitNode;
         }

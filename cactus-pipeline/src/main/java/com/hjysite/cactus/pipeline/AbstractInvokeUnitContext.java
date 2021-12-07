@@ -7,16 +7,16 @@ import com.hjysite.cactus.common.DefaultAttributeMap;
  * @author: hjy
  * @date: 2021/11/22
  **/
-public abstract class AbstractUnitInvokerContext extends DefaultAttributeMap implements UnitInvokerContext {
-    volatile AbstractUnitInvokerContext prev;
-    volatile AbstractUnitInvokerContext next;
+public abstract class AbstractInvokeUnitContext extends DefaultAttributeMap implements InvokeUnitContext {
+    volatile AbstractInvokeUnitContext prev;
+    volatile AbstractInvokeUnitContext next;
 
     private final UnitEngine engine;
     private final UnitEnginePipeline pipeline;
     private final UnitChainContext chainContext;
     private final String name;
 
-    protected AbstractUnitInvokerContext(UnitEngine engine, UnitEnginePipeline pipeline, UnitChainContext chainContext, String name) {
+    protected AbstractInvokeUnitContext(UnitEngine engine, UnitEnginePipeline pipeline, UnitChainContext chainContext, String name) {
         this.engine = engine;
         this.pipeline = pipeline;
         this.chainContext = chainContext;
@@ -24,12 +24,12 @@ public abstract class AbstractUnitInvokerContext extends DefaultAttributeMap imp
     }
 
     @Override
-    public AbstractUnitInvokerContext prev() {
+    public AbstractInvokeUnitContext prev() {
         return prev;
     }
 
     @Override
-    public AbstractUnitInvokerContext next() {
+    public AbstractInvokeUnitContext next() {
         return next;
     }
 
@@ -54,25 +54,25 @@ public abstract class AbstractUnitInvokerContext extends DefaultAttributeMap imp
     }
 
     @Override
-    public AbstractUnitInvokerContext fireWork(Object o) {
+    public AbstractInvokeUnitContext fireWork(Object o) {
         next.unit().work(next, o);
         return this;
     }
 
     @Override
-    public AbstractUnitInvokerContext fireExceptionCaught(Throwable throwable) {
+    public AbstractInvokeUnitContext fireExceptionCaught(Throwable throwable) {
         next.unit().exceptionCaught(next, throwable);
         return this;
     }
 
     @Override
-    public AbstractUnitInvokerContext fireEventTriggered(Object evt) {
+    public AbstractInvokeUnitContext fireEventTriggered(Object evt) {
         next.unit().eventTriggered(next, evt);
         return this;
     }
 
     @Override
-    public AbstractUnitInvokerContext fireWorkCompleted() {
+    public AbstractInvokeUnitContext fireWorkCompleted() {
         next.unit().workCompleted(next);
         return this;
     }
