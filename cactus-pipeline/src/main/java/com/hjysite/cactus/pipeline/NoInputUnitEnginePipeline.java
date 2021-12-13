@@ -91,7 +91,7 @@ public class NoInputUnitEnginePipeline extends DefaultUnitEnginePipeline {
 
     private void checkUnitIsNoInput(Unit[] units) {
         for (Unit unit : units) {
-            if (!(unit instanceof NoInputUnit) && !(unit instanceof NoInputUnitChain)) {
+            if (!(unit instanceof NoInputUnit)) {
                 throw new IllegalArgumentException("units are not all NoInputUnit");
             }
         }
