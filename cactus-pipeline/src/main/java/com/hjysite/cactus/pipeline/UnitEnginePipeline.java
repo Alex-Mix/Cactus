@@ -7,58 +7,58 @@ import com.hjysite.cactus.common.AttributeMap;
  * @author: hjy
  * @date: 2021/11/22
  **/
-public interface UnitEnginePipeline extends AttributeMap, UnitSequence {
+public interface UnitEnginePipeline<T extends Unit> extends AttributeMap, UnitSequence<T> {
 
     void exec(Object o);
 
     @Override
-    default UnitEnginePipeline addFirst(Unit unit) {
+    default UnitEnginePipeline<T> addFirst(T unit) {
         return addFirst(null, unit);
     }
 
     @Override
-    default UnitEnginePipeline addFirst(Unit... units) {
+    default UnitEnginePipeline<T> addFirst(T... units) {
         UnitSequence.super.addFirst(units);
         return this;
     }
 
     @Override
-    UnitEnginePipeline addFirst(String name, Unit newUnit);
+    UnitEnginePipeline<T> addFirst(String name, T newUnit);
 
     @Override
-    default UnitEnginePipeline addLast(Unit unit) {
+    default UnitEnginePipeline<T> addLast(T unit) {
         return addLast(null, unit);
     }
 
     @Override
-    default UnitEnginePipeline addLast(Unit... units) {
+    default UnitEnginePipeline<T> addLast(T... units) {
         UnitSequence.super.addLast(units);
         return this;
     }
 
     @Override
-    UnitEnginePipeline addLast(String name, Unit newUnit);
+    UnitEnginePipeline<T> addLast(String name, T newUnit);
 
     @Override
-    UnitEnginePipeline addBefore(String baseName, String name, Unit newUnit);
+    UnitEnginePipeline<T> addBefore(String baseName, String name, T newUnit);
 
     @Override
-    UnitEnginePipeline addAfter(String baseName, String name, Unit newUnit);
+    UnitEnginePipeline<T> addAfter(String baseName, String name, T newUnit);
 
     @Override
-    UnitEnginePipeline remove(Unit unit);
+    UnitEnginePipeline<T> remove(T unit);
 
     AbstractInvokeUnitContext findUnitContext(String name);
 
     AbstractInvokeUnitContext findUnitContext(Unit unit);
 
-    AbstractInvokeUnitContext findUnitContext(Class<? extends Unit> unitType);
+    <U extends Unit> AbstractInvokeUnitContext findUnitContext(Class<U> unitType);
 
     AbstractInvokeUnitContext firstContext();
 
     AbstractInvokeUnitContext lastContext();
 
-    UnitEnginePipeline clear();
+    UnitEnginePipeline<T> clear();
 
     Object resultPoll();
 }

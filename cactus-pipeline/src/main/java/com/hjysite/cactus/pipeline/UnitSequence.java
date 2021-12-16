@@ -8,13 +8,13 @@ import java.util.Map;
  * @author: hjy
  * @date: 2021/11/23
  **/
-public interface UnitSequence extends Iterable<Map.Entry<String, Unit>> {
+public interface UnitSequence<T extends Unit> extends Iterable<Map.Entry<String, T>> {
 
-    default UnitSequence addFirst(Unit unit) {
+    default UnitSequence<T> addFirst(T unit) {
         return addFirst(null, unit);
     }
 
-    default UnitSequence addFirst(Unit... units) {
+    default UnitSequence<T> addFirst(T... units) {
         if (units.length == 0 || units[0] == null) {
             return this;
         }
@@ -27,21 +27,21 @@ public interface UnitSequence extends Iterable<Map.Entry<String, Unit>> {
         }
 
         for (int i = size - 1; i >= 0; i--) {
-            Unit unit = units[i];
+            T unit = units[i];
             addFirst(unit);
         }
 
         return this;
     }
 
-    UnitSequence addFirst(String name, Unit newUnit);
+    UnitSequence<T> addFirst(String name, T newUnit);
 
-    default UnitSequence addLast(Unit unit) {
+    default UnitSequence<T> addLast(T unit) {
         return addLast(null, unit);
     }
 
-    default UnitSequence addLast(Unit... units) {
-        for (Unit u : units) {
+    default UnitSequence<T> addLast(T... units) {
+        for (T u : units) {
             if (u == null) {
                 break;
             }
@@ -51,51 +51,51 @@ public interface UnitSequence extends Iterable<Map.Entry<String, Unit>> {
         return this;
     }
 
-    UnitSequence addLast(String name, Unit newUnit);
+    UnitSequence<T> addLast(String name, T newUnit);
 
-    UnitSequence addBefore(String baseName, String name, Unit newUnit);
+    UnitSequence<T> addBefore(String baseName, String name, T newUnit);
 
-    UnitSequence addAfter(String baseName, String name, Unit newUnit);
+    UnitSequence<T> addAfter(String baseName, String name, T newUnit);
 
-    UnitSequence remove(Unit unit);
+    UnitSequence<T> remove(T unit);
 
     Unit remove(String name);
 
-    <T extends Unit> T remove(Class<T> unitType);
+    <U extends Unit> U remove(Class<U> unitType);
 
-    Unit removeFirst();
+    T removeFirst();
 
-    Unit removeLast();
+    T removeLast();
 
-    Unit replace(Unit oldUnit, String newName, Unit newUnit);
+    T replace(T oldUnit, String newName, T newUnit);
 
-    Unit replace(String oldName, String newName, Unit newUnit);
+    Unit replace(String oldName, String newName, T newUnit);
 
-    <T extends Unit> T replace(Class<T> oldUnitType, String newName, Unit newUnit);
+    <U extends Unit> U replace(Class<U> oldUnitType, String newName, T newUnit);
 
-    Unit findUnit(String name);
+    T findUnit(String name);
 
-    Unit findUnit(Unit unit);
+    T findUnit(T unit);
 
-    Unit findUnit(Class<? extends Unit> unitType);
+    <U extends Unit> U findUnit(Class<U> unitType);
 
-    Unit firstUnit();
+    T firstUnit();
 
-    Unit lastUnit();
+    T lastUnit();
 
     boolean isExist(String name);
 
-    boolean isExist(Unit unit);
+    boolean isExist(T unit);
 
-    boolean isExist(Class<? extends Unit> unitType);
+    <U extends Unit> boolean isExist(Class<U> unitType);
 
     long size();
 
     List<String> names();
 
-    Map<String, Unit> toMap();
+    Map<String, T> toMap();
 
-    static String ifNullGenerateNameAndCheckDuplicate(UnitSequence unitSequence, String name, Unit unit) {
+    static String ifNullGenerateNameAndCheckDuplicate(UnitSequence<?> unitSequence, String name, Unit unit) {
         if (name == null) {
             return generateName(unitSequence, unit);
         }
@@ -103,13 +103,13 @@ public interface UnitSequence extends Iterable<Map.Entry<String, Unit>> {
         return name;
     }
 
-    static void checkDuplicateName(UnitSequence unitSequence, String name) {
+    static void checkDuplicateName(UnitSequence<?> unitSequence, String name) {
         if (unitSequence.isExist(name)) {
             throw new IllegalArgumentException("this name is exist in this pipeline, name: " + name);
         }
     }
 
-    static String generateName(UnitSequence unitSequence, Unit unit) {
+    static String generateName(UnitSequence<?> unitSequence, Unit unit) {
         Class<? extends Unit> handlerType = unit.getClass();
         String name = generateName0(handlerType);
 

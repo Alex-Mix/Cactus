@@ -5,42 +5,42 @@ package com.hjysite.cactus.pipeline;
  * @author: hjy
  * @date: 2021/11/22
  **/
-public interface UnitChain extends Unit, UnitSequence {
+public interface UnitChain<T extends Unit> extends Unit, UnitSequence<T> {
 
     @Override
-    default UnitChain addFirst(Unit newUnit) {
+    default UnitChain<T> addFirst(T newUnit) {
         return addFirst(null, newUnit);
     }
 
     @Override
-    default UnitChain addFirst(Unit... units) {
+    default UnitChain<T> addFirst(T[] units) {
         UnitSequence.super.addFirst(units);
         return this;
     }
 
     @Override
-    UnitChain addFirst(String name, Unit newUnit);
+    UnitChain<T> addFirst(String name, T newUnit);
 
     @Override
-    default UnitChain addLast(Unit newUnit) {
+    default UnitChain<T> addLast(T newUnit) {
         return addLast(null, newUnit);
     }
 
     @Override
-    default UnitChain addLast(Unit... units) {
+    default UnitChain<T> addLast(T[] units) {
         UnitSequence.super.addLast(units);
         return this;
     }
 
     @Override
-    UnitChain addLast(String name, Unit newUnit);
+    UnitChain<T> addLast(String name, T newUnit);
 
     @Override
-    UnitChain addBefore(String baseName, String name, Unit newUnit);
+    UnitChain<T> addBefore(String baseName, String name, T newUnit);
 
     @Override
-    UnitChain addAfter(String baseName, String name, Unit newUnit);
+    UnitChain<T> addAfter(String baseName, String name, T newUnit);
 
     @Override
-    UnitChain remove(Unit unit);
+    UnitChain<T> remove(T unit);
 }

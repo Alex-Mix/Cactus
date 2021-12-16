@@ -8,7 +8,7 @@ package com.hjysite.cactus.pipeline;
 public class DefaultInvokeUnitContext extends AbstractInvokeUnitContext {
     private final Unit unit;
 
-    public DefaultInvokeUnitContext(UnitEngine engine, UnitEnginePipeline pipeline, String name, Unit unit) {
+    public DefaultInvokeUnitContext(UnitEngine engine, AbstractUnitEnginePipeline<Unit> pipeline, String name, Unit unit) {
         super(engine, pipeline, null, name);
         this.unit = unit;
     }

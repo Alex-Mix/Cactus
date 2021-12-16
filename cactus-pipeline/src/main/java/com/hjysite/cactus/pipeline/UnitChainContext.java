@@ -7,7 +7,7 @@ package com.hjysite.cactus.pipeline;
  **/
 public interface UnitChainContext extends InvokeUnitContext {
 
-    UnitChainInnerContext getInnerContext(DefaultUnitChain.UnitNode unitNode);
+    UnitChainInnerContext getInnerContext(AbstractUnitChain.UnitNode unitNode);
 
     interface UnitChainInnerContext extends InvokeUnitContext {
     }

@@ -5,12 +5,12 @@ package com.hjysite.cactus.pipeline;
  * @author: hjy
  * @date: 2021/11/25
  **/
-public abstract class NoInputUnit implements Unit {
+public interface NoInputUnit extends Unit {
     @Override
-    public final void work(InvokeUnitContext ctx, Object o) {
+    default void work(InvokeUnitContext ctx, Object o) {
         noInputWork(ctx);
         ctx.fireWork(o);
     }
 
-    abstract void noInputWork(UnitContext ctx);
+    void noInputWork(UnitContext ctx);
 }

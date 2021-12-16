@@ -7,12 +7,12 @@ import com.hjysite.cactus.common.TypeParameterMatcher;
  * @author: hjy
  * @date: 2021/11/26
  **/
-public abstract class SimpleUnit<T> implements Unit {
+public abstract class GenericsUnit<T> implements Unit {
 
     private final TypeParameterMatcher matcher;
 
-    protected SimpleUnit() {
-        matcher = TypeParameterMatcher.find(this, SimpleUnit.class, "T");
+    protected GenericsUnit() {
+        matcher = TypeParameterMatcher.find(this, GenericsUnit.class, "T");
     }
 
     @Override

@@ -205,7 +205,7 @@ class DefaultUnitEnginePipelineTest {
         assertEquals(result, 6);
     }
 
-    public final class IntIncrementUnit extends SimpleUnit<Integer> {
+    public final class IntIncrementUnit extends GenericsUnit<Integer> {
         @Override
         public void work0(InvokeUnitContext ctx, Integer origin) {
             ctx.fireWork(origin + 1);

@@ -22,7 +22,7 @@ public interface UnitContext extends AttributeMap {
 
     UnitEngine engine();
 
-    UnitEnginePipeline pipeline();
+    UnitEnginePipeline<Unit> pipeline();
 
     UnitChainContext chainContext();
 

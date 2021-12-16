@@ -12,11 +12,11 @@ public abstract class AbstractInvokeUnitContext extends DefaultAttributeMap impl
     volatile AbstractInvokeUnitContext next;
 
     private final UnitEngine engine;
-    private final UnitEnginePipeline pipeline;
+    private final AbstractUnitEnginePipeline<Unit> pipeline;
     private final UnitChainContext chainContext;
     private final String name;
 
-    protected AbstractInvokeUnitContext(UnitEngine engine, UnitEnginePipeline pipeline, UnitChainContext chainContext, String name) {
+    protected AbstractInvokeUnitContext(UnitEngine engine, AbstractUnitEnginePipeline<Unit> pipeline, UnitChainContext chainContext, String name) {
         this.engine = engine;
         this.pipeline = pipeline;
         this.chainContext = chainContext;
@@ -44,7 +44,7 @@ public abstract class AbstractInvokeUnitContext extends DefaultAttributeMap impl
     }
 
     @Override
-    public UnitEnginePipeline pipeline() {
+    public UnitEnginePipeline<Unit> pipeline() {
         return pipeline;
     }
 

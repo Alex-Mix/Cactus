@@ -11,15 +11,15 @@ import com.hjysite.cactus.common.AttributeTag;
  **/
 public class DefaultUnitChainContext extends AbstractInvokeUnitContext implements UnitChainContext {
 
-    private final UnitChain unitChain;
+    private final UnitChain<Unit> unitChain;
 
-    protected DefaultUnitChainContext(UnitEngine engine, UnitEnginePipeline pipeline, String name, UnitChain unitChain) {
+    protected DefaultUnitChainContext(UnitEngine engine, AbstractUnitEnginePipeline<Unit> pipeline, String name, UnitChain<Unit> unitChain) {
         super(engine, pipeline, null, name);
         this.unitChain = unitChain;
     }
 
     @Override
-    public UnitChain unit() {
+    public UnitChain<Unit> unit() {
         return unitChain;
     }
 
@@ -90,7 +90,7 @@ public class DefaultUnitChainContext extends AbstractInvokeUnitContext implement
         }
 
         @Override
-        public UnitEnginePipeline pipeline() {
+        public UnitEnginePipeline<Unit> pipeline() {
             return outCtx.pipeline();
         }
 
