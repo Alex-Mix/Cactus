@@ -2,10 +2,7 @@ package com.hjysite.cactus.pipeline;
 
 import com.hjysite.cactus.common.DefaultAttributeMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.function.BiPredicate;
 
@@ -336,13 +333,31 @@ public class DefaultUnitEnginePipeline extends DefaultAttributeMap implements Un
     public List<String> names() {
         List<String> list = new ArrayList<String>();
         AbstractInvokeUnitContext ctx = head.next;
-        for (;;) {
+        for (; ; ) {
             if (ctx == null || ctx == tail) {
                 return list;
             }
             list.add(ctx.name());
             ctx = ctx.next;
         }
+    }
+
+    @Override
+    public Map<String, Unit> toMap() {
+        Map<String, Unit> map = new LinkedHashMap<>();
+        AbstractInvokeUnitContext cur = head.next;
+        for (; ; ) {
+            if (cur == tail) {
+                return map;
+            }
+            map.put(cur.name(), cur.unit());
+            cur = cur.next;
+        }
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, Unit>> iterator() {
+        return toMap().entrySet().iterator();
     }
 
     class HeadContextInvoke extends AbstractInvokeUnitContext implements Unit {

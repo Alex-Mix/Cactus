@@ -1,13 +1,14 @@
 package com.hjysite.cactus.pipeline;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: TODO
  * @author: hjy
  * @date: 2021/11/23
  **/
-public interface UnitSequence {
+public interface UnitSequence extends Iterable<Map.Entry<String, Unit>> {
 
     default UnitSequence addFirst(Unit unit) {
         return addFirst(null, unit);
@@ -91,6 +92,8 @@ public interface UnitSequence {
     long size();
 
     List<String> names();
+
+    Map<String, Unit> toMap();
 
     static String ifNullGenerateNameAndCheckDuplicate(UnitSequence unitSequence, String name, Unit unit) {
         if (name == null) {

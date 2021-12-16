@@ -1,9 +1,6 @@
 package com.hjysite.cactus.pipeline;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiPredicate;
 
 /**
@@ -270,6 +267,17 @@ public class DefaultUnitChain implements UnitChain {
         }
     }
 
+    @Override
+    public Map<String, Unit> toMap() {
+        Map<String, Unit> map = new LinkedHashMap<>();
+        UnitNode cur = head.next;
+        while (cur != tail) {
+            map.put(cur.name, cur.unit);
+            cur = cur.next;
+        }
+        return map;
+    }
+
     public UnitNode findNode(String name) {
         return findNode0((cur, arg) -> cur.name.equals(arg), name);
     }
@@ -321,6 +329,12 @@ public class DefaultUnitChain implements UnitChain {
         }
     }
 
+    @Override
+    public Iterator<Map.Entry<String, Unit>> iterator() {
+        return toMap().entrySet().iterator();
+    }
+
+    @SuppressWarnings("InnerClassMayBeStatic")
     final class UnitNode {
         volatile UnitNode prev;
         volatile UnitNode next;
@@ -333,7 +347,7 @@ public class DefaultUnitChain implements UnitChain {
         }
     }
 
-
+    @SuppressWarnings("InnerClassMayBeStatic")
     final class HeadNode implements Unit {
         @Override
         public void work(InvokeUnitContext ctx, Object o) {
@@ -342,6 +356,7 @@ public class DefaultUnitChain implements UnitChain {
     }
 
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     final class TailNode implements Unit {
         @Override
         public void work(InvokeUnitContext ctx, Object o) {
