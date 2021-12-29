@@ -17,7 +17,7 @@ public interface UnitEngine extends AttributeMap {
         Throwable throwable = null;
         try {
             try {
-                UnitEnginePipeline pipeline = executePipeline();
+                UnitEnginePipeline<Unit> pipeline = executePipeline();
                 log.debug("========= executePipeline开始执行 ============");
                 pipeline.exec(o);
                 log.debug("========= executePipeline执行结束 ============");
@@ -33,35 +33,35 @@ public interface UnitEngine extends AttributeMap {
         }
     }
 
-    UnitEnginePipeline executePipeline();
+    UnitEnginePipeline<Unit> executePipeline();
 
-    UnitEnginePipeline completePipeline();
+    UnitEnginePipeline<Unit> completePipeline();
 
-    UnitEnginePipeline successPipeline();
+    UnitEnginePipeline<Unit> successPipeline();
 
-    UnitEnginePipeline failurePipeline();
+    UnitEnginePipeline<Unit> failurePipeline();
 
-    default UnitEnginePipeline addSuccessUnit(Unit unit) {
+    default UnitEnginePipeline<Unit> addSuccessUnit(Unit unit) {
         return addSuccessUnit(null, unit);
     }
 
-    default UnitEnginePipeline addSuccessUnit(String name, Unit unit) {
+    default UnitEnginePipeline<Unit> addSuccessUnit(String name, Unit unit) {
         return successPipeline().addLast(unit);
     }
 
-    default UnitEnginePipeline addCompleteUnit(Unit unit) {
+    default UnitEnginePipeline<Unit> addCompleteUnit(Unit unit) {
         return addCompleteUnit(null, unit);
     }
 
-    default UnitEnginePipeline addCompleteUnit(String name, Unit unit) {
+    default UnitEnginePipeline<Unit> addCompleteUnit(String name, Unit unit) {
         return completePipeline().addLast(name, unit);
     }
 
-    default UnitEnginePipeline addFailureUnit(Unit unit) {
+    default UnitEnginePipeline<Unit> addFailureUnit(Unit unit) {
         return addFailureUnit(null, unit);
     }
 
-    default UnitEnginePipeline addFailureUnit(String name, Unit unit) {
+    default UnitEnginePipeline<Unit> addFailureUnit(String name, Unit unit) {
         return failurePipeline().addLast(name, unit);
     }
 

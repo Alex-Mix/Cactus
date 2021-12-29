@@ -16,17 +16,5 @@ public interface Unit {
 
     default void unitRemoved(InvokeUnitContext ctx) {
     }
-
-    default void workCompleted(InvokeUnitContext ctx) {
-        ctx.fireWorkCompleted();
-    }
-
-    default void exceptionCaught(InvokeUnitContext ctx, Throwable throwable) {
-        ctx.fireExceptionCaught(throwable);
-    }
-
-    default void eventTriggered(InvokeUnitContext ctx, Object evt) {
-        ctx.fireEventTriggered(evt);
-    }
     
 }

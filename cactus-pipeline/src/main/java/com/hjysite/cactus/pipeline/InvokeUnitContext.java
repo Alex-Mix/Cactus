@@ -15,13 +15,4 @@ public interface InvokeUnitContext extends UnitContext, UnitInvoker {
 
     @Override
     InvokeUnitContext fireWork(Object o);
-
-    @Override
-    InvokeUnitContext fireExceptionCaught(Throwable throwable);
-
-    @Override
-    InvokeUnitContext fireEventTriggered(Object evt);
-
-    @Override
-    InvokeUnitContext fireWorkCompleted();
 }

@@ -58,22 +58,4 @@ public abstract class AbstractInvokeUnitContext extends DefaultAttributeMap impl
         next.unit().work(next, o);
         return this;
     }
-
-    @Override
-    public AbstractInvokeUnitContext fireExceptionCaught(Throwable throwable) {
-        next.unit().exceptionCaught(next, throwable);
-        return this;
-    }
-
-    @Override
-    public AbstractInvokeUnitContext fireEventTriggered(Object evt) {
-        next.unit().eventTriggered(next, evt);
-        return this;
-    }
-
-    @Override
-    public AbstractInvokeUnitContext fireWorkCompleted() {
-        next.unit().workCompleted(next);
-        return this;
-    }
 }

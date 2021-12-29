@@ -8,10 +8,4 @@ package com.hjysite.cactus.pipeline;
 public interface UnitInvoker {
     
     UnitInvoker fireWork(Object o);
-
-    UnitInvoker fireExceptionCaught(Throwable throwable);
-
-    UnitInvoker fireEventTriggered(Object evt);
-
-    UnitInvoker fireWorkCompleted();
 }

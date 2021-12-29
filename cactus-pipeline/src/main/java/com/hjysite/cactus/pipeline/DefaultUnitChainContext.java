@@ -30,24 +30,6 @@ public class DefaultUnitChainContext extends AbstractInvokeUnitContext implement
     }
 
     @Override
-    public DefaultUnitChainContext fireExceptionCaught(Throwable throwable) {
-        super.fireExceptionCaught(throwable);
-        return this;
-    }
-
-    @Override
-    public DefaultUnitChainContext fireEventTriggered(Object evt) {
-        super.fireEventTriggered(evt);
-        return this;
-    }
-
-    @Override
-    public DefaultUnitChainContext fireWorkCompleted() {
-        super.fireWorkCompleted();
-        return this;
-    }
-
-    @Override
     public DefaultUnitChainInnerContext getInnerContext(DefaultUnitChain.UnitNode unitNode) {
         return new DefaultUnitChainInnerContext(this, unitNode);
     }
@@ -103,27 +85,6 @@ public class DefaultUnitChainContext extends AbstractInvokeUnitContext implement
         public DefaultUnitChainInnerContext fireWork(Object o) {
             DefaultUnitChainInnerContext nextCtx = next();
             nextCtx.unit().work(nextCtx, o);
-            return this;
-        }
-
-        @Override
-        public DefaultUnitChainInnerContext fireExceptionCaught(Throwable throwable) {
-            DefaultUnitChainInnerContext nextCtx = next();
-            nextCtx.unit().exceptionCaught(nextCtx, throwable);
-            return this;
-        }
-
-        @Override
-        public DefaultUnitChainInnerContext fireEventTriggered(Object evt) {
-            DefaultUnitChainInnerContext nextCtx = next();
-            nextCtx.unit().eventTriggered(nextCtx, evt);
-            return this;
-        }
-
-        @Override
-        public DefaultUnitChainInnerContext fireWorkCompleted() {
-            DefaultUnitChainInnerContext nextCtx = next();
-            nextCtx.unit().workCompleted(nextCtx);
             return this;
         }
 
