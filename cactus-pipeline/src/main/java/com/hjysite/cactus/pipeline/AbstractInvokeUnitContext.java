@@ -1,13 +1,14 @@
 package com.hjysite.cactus.pipeline;
 
 import com.hjysite.cactus.common.DefaultAttributeMap;
+import com.hjysite.cactus.common.DefaultConcurrentAttributeMap;
 
 /**
  * @description: TODO
  * @author: hjy
  * @date: 2021/11/22
  **/
-public abstract class AbstractInvokeUnitContext extends DefaultAttributeMap implements InvokeUnitContext {
+public abstract class AbstractInvokeUnitContext extends DefaultConcurrentAttributeMap implements InvokeUnitContext {
     volatile AbstractInvokeUnitContext prev;
     volatile AbstractInvokeUnitContext next;
 

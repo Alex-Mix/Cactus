@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * @author: hjy
  * @date: 2021/11/22
  **/
-public interface UnitEngine extends AttributeMap {
+public interface UnitEngine<T extends Unit> extends AttributeMap {
     Logger log = LoggerFactory.getLogger(UnitEngine.class);
 
     default void execute(Object o) {
@@ -17,39 +17,45 @@ public interface UnitEngine extends AttributeMap {
         Throwable throwable = null;
         try {
             try {
-                UnitEnginePipeline<Unit> pipeline = executePipeline();
+                UnitEnginePipeline<T> pipeline = executePipeline();
                 log.debug("========= executePipeline开始执行 ============");
                 pipeline.exec(o);
                 log.debug("========= executePipeline执行结束 ============");
                 result = pipeline.resultPoll();
             } catch (Throwable t) {
                 throwable = t;
-                whenFail(t);
+                log.debug("========= 开始执行failurePipeline ============");
+                failurePipeline().exec(throwable);
+                log.debug("========= 结束执行failurePipeline ============");
                 return;
             }
-            whenSuccess(result);
+            log.debug("========= 开始执行successPipeline ============");
+            successPipeline().exec(result);
+            log.debug("========= 结束执行successPipeline ============");
         } finally {
-            whenComplete(throwable == null ? result : throwable);
+            log.debug("========= 开始执行completePipeline ============");
+            completePipeline().exec(throwable == null ? result : throwable);
+            log.debug("========= 结束执行completePipeline ============");
         }
     }
 
-    UnitEnginePipeline<Unit> executePipeline();
+    UnitEnginePipeline<T> executePipeline();
 
     UnitEnginePipeline<Unit> completePipeline();
 
-    UnitEnginePipeline<Unit> successPipeline();
+    UnitEnginePipeline<T> successPipeline();
 
     UnitEnginePipeline<Unit> failurePipeline();
 
-    default UnitEnginePipeline<Unit> addSuccessUnit(Unit unit) {
+    default UnitEnginePipeline<T> addSuccessUnit(T unit) {
         return addSuccessUnit(null, unit);
     }
 
-    default UnitEnginePipeline<Unit> addSuccessUnit(String name, Unit unit) {
+    default UnitEnginePipeline<T> addSuccessUnit(String name, T unit) {
         return successPipeline().addLast(unit);
     }
 
-    default UnitEnginePipeline<Unit> addCompleteUnit(Unit unit) {
+    default UnitEnginePipeline<Unit> addCompleteUnit(T unit) {
         return addCompleteUnit(null, unit);
     }
 
@@ -57,29 +63,11 @@ public interface UnitEngine extends AttributeMap {
         return completePipeline().addLast(name, unit);
     }
 
-    default UnitEnginePipeline<Unit> addFailureUnit(Unit unit) {
+    default UnitEnginePipeline<Unit> addFailureUnit(T unit) {
         return addFailureUnit(null, unit);
     }
 
     default UnitEnginePipeline<Unit> addFailureUnit(String name, Unit unit) {
         return failurePipeline().addLast(name, unit);
-    }
-
-    default void whenComplete(Object result) {
-        log.debug("========= 开始执行completePipeline ============");
-        completePipeline().exec(result);
-        log.debug("========= 结束执行completePipeline ============");
-    }
-
-    default void whenSuccess(Object result) {
-        log.debug("========= 开始执行successPipeline ============");
-        successPipeline().exec(result);
-        log.debug("========= 结束执行successPipeline ============");
-    }
-
-    default void whenFail(Throwable throwable) {
-        log.debug("========= 开始执行failurePipeline ============");
-        failurePipeline().exec(throwable);
-        log.debug("========= 结束执行failurePipeline ============");
     }
 }

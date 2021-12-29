@@ -18,4 +18,9 @@ public class NoInputUnitEnginePipeline extends AbstractUnitEnginePipeline<NoInpu
     public void exec() {
         super.exec(null);
     }
+
+    @Override
+    public Object resultPoll() {
+        throw new UnsupportedOperationException("NoInputUnitEnginePipeline do not have result can poll");
+    }
 }

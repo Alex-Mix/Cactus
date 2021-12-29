@@ -1,6 +1,6 @@
 package com.hjysite.cactus.pipeline;
 
-import com.hjysite.cactus.common.DefaultAttributeMap;
+import com.hjysite.cactus.common.DefaultConcurrentAttributeMap;
 
 import java.util.*;
 import java.util.concurrent.LinkedTransferQueue;
@@ -11,7 +11,7 @@ import java.util.function.BiPredicate;
  * @author: hjy
  * @date: 2021/12/16
  **/
-public abstract class AbstractUnitEnginePipeline<T extends Unit> extends DefaultAttributeMap implements UnitEnginePipeline<T> {
+public abstract class AbstractUnitEnginePipeline<T extends Unit> extends DefaultConcurrentAttributeMap implements UnitEnginePipeline<T> {
     private final String HEAD_NAME = UnitSequence.generateName0(HeadContext.class);
     private final String TAIL_NAME = UnitSequence.generateName0(TailContext.class);
 
